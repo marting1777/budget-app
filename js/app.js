@@ -95,10 +95,10 @@ let UIController = (function() {
             } else if (type === 'exp') {
                 element = DOMstrings.expensesContainer
 
-                html = `<div class="item clearfix" id="expense-0">
-                    <div class="item__description">Apartment rent</div>
+                html = `<div class="item clearfix" id="expense-%id%">
+                    <div class="item__description">%description%</div>
                     <div class="right clearfix">
-                        <div class="item__value">- 900.00</div>
+                        <div class="item__value">%value%</div>
                         <div class="item__percentage">21%</div>
                         <div class="item__delete">
                             <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button>
@@ -112,6 +112,20 @@ let UIController = (function() {
             newHtml = newHtml.replace('%value%', obj.value)
             // Insert the HTML into the DOM
             document.querySelector(element).insertAdjacentHTML('beforeend', newHtml)
+        },
+
+        clearFields: function() {
+            let fields
+            let fieldsArr
+
+            fields = document.querySelectorAll(`${DOMstrings.inputDescription}, ${DOMstrings.inputValue}`)
+            fieldsArr = Array.prototype.slice.call(fields)
+
+            fieldsArr.forEach(function(current, index, array) {
+                current.value = ''
+            })
+
+            fieldsArr[0].focus()
         },
 
         getDOMstrings: function() {
@@ -146,6 +160,9 @@ let controller = (function(budgetCtrl, UICtrl) {
         newItem = budgetController.addItem(input.type, input.description, input.value)
         // Add the item to the UI
         UICtrl.addListItem(newItem, input.type)
+
+        // Clear the fields
+        UICtrl.clearFields()
         // Calculate the Bugdet
 
         // Display the budget on the UI
