@@ -14,6 +14,13 @@ let budgetController = (function() {
         this.value = value
     }
 
+    let calculateTotal = function(type) {
+        let sum = 0
+        data.allItems[type].forEach((current) => {
+            sum = sum + current.value
+        })
+    }
+
     let data = {
         allItems: {
             exp: [],
@@ -49,6 +56,16 @@ let budgetController = (function() {
             // Return the new element
             return newItem
         },
+
+        calculateBudget: function() {
+            // Calculate total expenses and total income
+
+            // Calculate the budget income - expenses
+
+            // Calculate the percentage of income that we spent
+
+        },
+
         testing: function() {
             console.log(data)
         }
@@ -73,7 +90,7 @@ let UIController = (function() {
             return {
                 type: document.querySelector(DOMstrings.inputType).value, // Will be either INC or EXP
                 description: document.querySelector(DOMstrings.inputDescription).value,
-                value: document.querySelector(DOMstrings.inputValue).value
+                value: parseFloat(document.querySelector(DOMstrings.inputValue).value)
             }
         },
 
@@ -84,27 +101,27 @@ let UIController = (function() {
                 element = DOMstrings.incomeContainer
 
                 html = `<div class="item clearfix" id="income-%id%">
-                    <div class="item__description">%description%</div>
-                    <div class="right clearfix">
-                        <div class="item__value">%value%</div>
-                        <div class="item__delete">
-                            <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button>
-                        </div>
-                    </div>
-                </div>`
+                            <div class="item__description">%description%</div>
+                            <div class="right clearfix">
+                                <div class="item__value">%value%</div>
+                                <div class="item__delete">
+                                    <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button>
+                                </div>
+                            </div>
+                        </div>`
             } else if (type === 'exp') {
                 element = DOMstrings.expensesContainer
 
                 html = `<div class="item clearfix" id="expense-%id%">
-                    <div class="item__description">%description%</div>
-                    <div class="right clearfix">
-                        <div class="item__value">%value%</div>
-                        <div class="item__percentage">21%</div>
-                        <div class="item__delete">
-                            <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button>
-                        </div>
-                    </div>
-                </div>`
+                            <div class="item__description">%description%</div>
+                            <div class="right clearfix">
+                                <div class="item__value">%value%</div>
+                                <div class="item__percentage">21%</div>
+                                <div class="item__delete">
+                                    <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button>
+                                </div>
+                            </div>
+                        </div>`
             }
             // Replace the placeholder text with some actual data
             newHtml = html.replace('%id%', obj.id)
@@ -121,7 +138,7 @@ let UIController = (function() {
             fields = document.querySelectorAll(`${DOMstrings.inputDescription}, ${DOMstrings.inputValue}`)
             fieldsArr = Array.prototype.slice.call(fields)
 
-            fieldsArr.forEach(function(current, index, array) {
+            fieldsArr.forEach((current, index, array) => {
                 current.value = ''
             })
 
@@ -150,23 +167,30 @@ let controller = (function(budgetCtrl, UICtrl) {
             }
         })
     }
+
+    let updateBudget = function() {
+        // Calculate the Bugdet
+
+        // Return the Budget
+
+        // Display the budget on the UI
+    }
     
     let ctrlAddItem = function() {
         let input
         let newItem
         // 1. Get the field input data
         input = UICtrl.getinput()
-        // 2. Add the item to the budget controller
-        newItem = budgetController.addItem(input.type, input.description, input.value)
-        // Add the item to the UI
-        UICtrl.addListItem(newItem, input.type)
 
-        // Clear the fields
-        UICtrl.clearFields()
-        // Calculate the Bugdet
-
-        // Display the budget on the UI
-
+        if (input.description !== '' && !isNaN(input.value) && input.value > 0) {
+            // 2. Add the item to the budget controller
+            newItem = budgetController.addItem(input.type, input.description, input.value)
+            // Add the item to the UI
+            UICtrl.addListItem(newItem, input.type)
+            // Clear the fields
+            UICtrl.clearFields()
+            // Calculate and update budget
+        }
     }
 
     return {
